@@ -5,12 +5,13 @@
     use Models\User as User;
     use DAO\Connection as Connection;
 
-    class UserDAO 
+    class UserDAO implements iUserDAO
     {
         private $connection;
         private $tableName = "users";
 
-        public function add(User $user) {
+        public function add(User $user) 
+        {
             try {
                 $query = "INSERT INTO " . $this->tableName . " (user_role, user_name, user_last_name, user_email, user_password, user_phone) VALUES (:user_role, :user_name, :user_last_name, :user_email, :user_password, :user_phone);";
 
@@ -31,7 +32,8 @@
             }
         }
 
-        public function modify(User $user) {
+        public function modify(User $user) 
+        {
             try
             {
                 $query = "UPDATE " . $this->tableName . " SET user_name = :user_name, user_last_name = :user_last_name, user_email = :user_email, user_password = :user_password, user_phone = :user_phone WHERE (user_id = :user_id);";
@@ -54,7 +56,8 @@
             }
         }
 
-        public function getUser($email) {
+        public function getUser($email) 
+        {
             try {
                 $parameters['user_email'] = $email;
                 
@@ -77,7 +80,8 @@
             }
         }
 
-        public function getUserById($id) {
+        public function getUserById($id) 
+        {
             try {
                 $parameters['user_id'] = $id;
                 
@@ -100,7 +104,8 @@
             }
         }
 
-        public function getAll() {
+        public function getAll() 
+        {
             try {
                 $query = "SELECT * FROM " . $this->tableName;
 
@@ -124,8 +129,8 @@
             }
         }
 
-        public function mapear($value) {
-            
+        private function mapear($value) 
+        {
             $resp = array_map(function($p) {
                 $user = new User();
                 $user->setId($p['user_id']);
@@ -135,7 +140,6 @@
                 $user->setEmail($p['user_email']);
                 $user->setPass($p['user_password']);
                 $user->setPhoneNumber($p['user_phone']);
-                
 
                 return $user;
             }, $value);

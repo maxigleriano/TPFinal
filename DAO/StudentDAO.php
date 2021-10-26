@@ -4,7 +4,7 @@
 
     use Models\Student as Student;
 
-    class StudentDAO
+    class StudentDAO implements iStudentDAO
     {
         private $studentList = array();
         private $url;

@@ -5,12 +5,13 @@
     use Models\Company as Company;
     use DAO\Connection as Connection;
 
-    class CompanyDAO 
+    class CompanyDAO implements iCompanyDAO
     {
         private $connection;
-        private $tableName = "Companies";
+        private $tableName = "companies";
 
-        public function add(Company $company) {
+        public function add(Company $company) 
+        {
             try {
                 $query = "INSERT INTO " . $this->tableName . " (company_name, company_city, company_address, company_email, company_phone, company_cuit, company_description) VALUES (:company_name, :company_city, :company_address, :company_email, :company_phone, :company_cuit, :company_description);";
 
@@ -32,7 +33,8 @@
             }
         }
 
-        public function modify(Company $company) {
+        public function modify(Company $company)
+        {
             try
             {
                 $query = "UPDATE " . $this->tableName . " SET company_name = :company_name, company_city = :company_city, company_address = :company_address, company_email = :company_email, company_cuit = :company_cuit, company_description = :company_description WHERE (company_id = :company_id);";
@@ -57,7 +59,13 @@
             }
         }
 
-        public function getCompany($id) {
+        public function delete(Company $company)
+        {
+            # code...
+        }
+
+        public function getCompany($id) 
+        {
             try {
                 $parameters['company_id'] = $id;
                 
@@ -80,7 +88,8 @@
             }
         }
 
-        public function getAll() {
+        public function getAll() 
+        {
             try {
                 $query = "SELECT * FROM " . $this->tableName;
 
@@ -104,8 +113,8 @@
             }
         }
 
-        public function mapear($value) {
-            
+        private function mapear($value) 
+        {
             $resp = array_map(function($p) {
                 $company = new Company();
                 $company->setId($p['company_id']);
@@ -116,7 +125,6 @@
                 $company->setPhoneNumber($p['company_phone']);
                 $company->setCuit($p['company_cuit']);
                 $company->setDescription($p['company_description']);
-                
 
                 return $company;
             }, $value);

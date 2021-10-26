@@ -11,9 +11,7 @@
         private $email;
         private $phoneNumber;
         private $cuit;
-        private $description;
-
-       
+        private $description; 
 
         /**
          * Get the value of id

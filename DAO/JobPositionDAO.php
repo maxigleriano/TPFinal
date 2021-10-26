@@ -2,33 +2,33 @@
 
     namespace DAO;
 
-    use Models\Career as Career;
+    use Models\JobPosition as JobPosition;
 
-    class CareerDAO implements iCareerDAO
+    class JobPositionDAO implements iJobPositionDAO
     {
-        private $careerList = array();
+        private $jobPositionList = array();
         private $url;
 
         public function __construct()
         {
-            $this->url = 'https://utn-students-api.herokuapp.com/api/Career';
+            $this->url = 'https://utn-students-api.herokuapp.com/api/JobPosition';
         }
 
         public function getAll()
         {
             $this->retrieveData();
 
-            return $this->careerList;
+            return $this->jobPositionList;
         }
 
-        public function getCareer($id)
+        public function getJobPosition($id)
         {
             $this->retrieveData();
 
-            foreach($this->careerList as $career) {
-                if($career->getId() == $id) {
+            foreach($this->jobPositionList as $jobPosition) {
+                if($jobPosition->getId() == $id) {
 
-                    return $career;
+                    return $jobPosition;
                 }
             }
 
@@ -38,7 +38,7 @@
 
         private function retrieveData()
         {
-            $this->careerList = array();
+            $this->jobPositionList = array();
 
             $httpheader = ['x-api-key: ' . API_KEY];
 
@@ -56,12 +56,12 @@
 
             foreach($arrayToDecode as $valuesArray)
             {
-                $career = new Career();
-                $career->setId($valuesArray["careerId"]);
-                $career->setDescription($valuesArray["description"]);
-                $career->setActive($valuesArray["active"]);
+                $jobPosition = new JobPosition();
+                $jobPosition->setId($valuesArray["JobPositionId"]);
+                $jobPosition->setCareer($valuesArray["careerId"]);
+                $jobPosition->setDescription($valuesArray["description"]);
 
-                array_push($this->careerList, $career);
+                array_push($this->jobPositionList, $jobPosition);
             }
         }
     }
