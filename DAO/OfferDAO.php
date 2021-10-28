@@ -32,7 +32,7 @@
         public function modify(Offer $offer) {
             try
             {
-                $query = "UPDATE " . $this->tableName . " SET company_id = :company_id, job_position = :job_position, career_id = :career_id, beginning_date = :beginnig_date, ending_date = :ending_date WHERE (offer_id = :offer_id);";
+                $query = "UPDATE " . $this->tableName . " SET company_id = :company_id, job_position = :job_position, career_id = :career_id, beginning_date = :beginning_date, ending_date = :ending_date WHERE (offer_id = :offer_id);";
 
                 $this->connection = Connection::GetInstance();
 
@@ -42,6 +42,25 @@
                 $parameters["career_id"] = $offer->getCareer();
                 $parameters["beginning_date"] = $offer->getBeginningDate();
                 $parameters["ending_date"] = $offer->getEndingDate();
+
+                $this->connection->ExecuteNonQuery($query,$parameters);
+
+            }
+            catch(PDOException $e)
+            {
+                echo $e->getMessage();
+            }
+        }
+
+        public function delete(Offer $offer)
+        {
+            try 
+            {
+                $query = "DELETE FROM " . $this->tableName . " WHERE (offer_id = :offer_id);";
+
+                $this->connection = Connection::GetInstance();
+
+                $parameters['offer_id'] = $offer->getId();
 
                 $this->connection->ExecuteNonQuery($query,$parameters);
 
@@ -107,7 +126,7 @@
                 $offer->setCompany($p['company_id']);
                 $offer->setPosition($p['job_position']);
                 $offer->setCareer($p['career_id']);
-                $offer->setBegnningDate($p['beginning_date']);
+                $offer->setBeginningDate($p['beginning_date']);
                 $offer->setEndingDate($p['ending_date']);           
 
                 return $offer;

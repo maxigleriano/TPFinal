@@ -12,5 +12,14 @@
             } else {
                 require_once(VIEWS_PATH . "login.php");
             }
-        }        
+        }   
+        
+        public function adminView() 
+        {
+            if(isset($_SESSION["loggedUser"]) && ($_SESSION["loggedUser"]->getRole() == 1)) {
+                require_once(VIEWS_PATH . "Admin/adminView.php");
+            } else {
+                $this->Index();
+            }
+        }
     }

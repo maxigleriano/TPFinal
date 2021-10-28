@@ -35,6 +35,22 @@
             return null;
         }
 
+        public function getJobPositionsByCareer($career)
+        {
+            $this->retrieveData();
+
+            $result = array();
+
+            foreach($this->jobPositionList as $jobPosition) {
+                if($jobPosition->getCareer() == $career) {
+
+                    array_push($result, $jobPosition);
+                }
+            }
+
+            return $result;
+        }
+
 
         private function retrieveData()
         {
@@ -57,7 +73,7 @@
             foreach($arrayToDecode as $valuesArray)
             {
                 $jobPosition = new JobPosition();
-                $jobPosition->setId($valuesArray["JobPositionId"]);
+                $jobPosition->setId($valuesArray["jobPositionId"]);
                 $jobPosition->setCareer($valuesArray["careerId"]);
                 $jobPosition->setDescription($valuesArray["description"]);
 

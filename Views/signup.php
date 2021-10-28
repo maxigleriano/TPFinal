@@ -1,4 +1,4 @@
-<?php  require_once(VIEWS_PATH . "nav.php") ?>
+<?php require_once(VIEWS_PATH . "nav.php") ?>
 
 <body>
     <main class="d-flex align-items-center justify-content-center height-100" >
@@ -22,4 +22,3 @@
            </form>
         </div>
     </main>
-</body>

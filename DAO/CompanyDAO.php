@@ -13,7 +13,7 @@
         public function add(Company $company) 
         {
             try {
-                $query = "INSERT INTO " . $this->tableName . " (company_name, company_city, company_address, company_email, company_phone, company_cuit, company_description) VALUES (:company_name, :company_city, :company_address, :company_email, :company_phone, :company_cuit, :company_description);";
+                $query = "INSERT INTO " . $this->tableName . " (company_name, company_city, company_address, company_email, company_phone, company_cuit) VALUES (:company_name, :company_city, :company_address, :company_email, :company_phone, :company_cuit);";
 
                 $parameters["company_name"] = $company->getName();
                 $parameters["company_city"] = $company->getCity();
@@ -21,7 +21,6 @@
                 $parameters["company_email"] = $company->getEmail();
                 $parameters["company_phone"] = $company->getPhoneNumber();
                 $parameters["company_cuit"] = $company->getCuit();
-                $parameters["company_description"] = $company->getDescription();
 
                 $this->connection = Connection::GetInstance();
                 
@@ -37,7 +36,7 @@
         {
             try
             {
-                $query = "UPDATE " . $this->tableName . " SET company_name = :company_name, company_city = :company_city, company_address = :company_address, company_email = :company_email, company_cuit = :company_cuit, company_description = :company_description WHERE (company_id = :company_id);";
+                $query = "UPDATE " . $this->tableName . " SET company_name = :company_name, company_city = :company_city, company_address = :company_address, company_email = :company_email, company_phone = :company_phone, company_cuit = :company_cuit WHERE (company_id = :company_id);";
 
                 $this->connection = Connection::GetInstance();
 
@@ -48,7 +47,6 @@
                 $parameters["company_email"] = $company->getEmail();
                 $parameters["company_phone"] = $company->getPhoneNumber();
                 $parameters["company_cuit"] = $company->getCuit();
-                $parameters["company_description"] = $company->getDescription();
 
                 $this->connection->ExecuteNonQuery($query,$parameters);
 
@@ -61,10 +59,48 @@
 
         public function delete(Company $company)
         {
-            # code...
+            try 
+            {
+                $query = "DELETE FROM " . $this->tableName . " WHERE (company_id = :company_id);";
+
+                $this->connection = Connection::GetInstance();
+
+                $parameters['company_id'] = $company->getId();
+
+                $this->connection->ExecuteNonQuery($query,$parameters);
+
+            }
+            catch(PDOException $e)
+            {
+                echo $e->getMessage();
+            }
         }
 
-        public function getCompany($id) 
+        public function getCompany($email) 
+        {
+            try {
+                $parameters['company_email'] = $email;
+                
+                $query = "SELECT * FROM " . $this->tableName . " WHERE (company_email = :company_email);";
+                
+                $this->connection = Connection::GetInstance(); 
+
+                $resultSet = $this->connection->Execute($query, $parameters);
+                
+                if($resultSet) {
+                    $newResultSet = $this->mapear($resultSet);
+
+                    return  $newResultSet[0];
+                }
+                return false;
+            }
+            
+            catch(PDOException $e) {
+                    echo $e->getMessage();
+            }
+        }
+
+        public function getCompanyById($id) 
         {
             try {
                 $parameters['company_id'] = $id;
@@ -124,7 +160,6 @@
                 $company->setEmail($p['company_email']);
                 $company->setPhoneNumber($p['company_phone']);
                 $company->setCuit($p['company_cuit']);
-                $company->setDescription($p['company_description']);
 
                 return $company;
             }, $value);

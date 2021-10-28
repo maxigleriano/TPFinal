@@ -39,18 +39,16 @@
                     }
                     else
                     {
-                        $student = $this->studentDAO->getStudent($email);
-                        $career = $this->careerDAO->getCareer($student->getCareer());
-                        $student->setCareer($career);                        
+                        $student = $this->studentDAO->getStudent($email);                    
 
                         if($student->getActive())
                         {
                             $_SESSION["loggedUser"] = $user;
-                            require_once(VIEWS_PATH . "index.php");
+                            $this->index();
                         }
                         else
                         {
-                            echo "<script> if(confirm('Este estudiante ya no se encuentra activo en nuestro sistema. Por favor vuelva a intentarlo.')); </script>";
+                            echo "<script> if(confirm('Este estudiante ya no se encuentra activo en nuestro sistema.')); </script>";
                             $this->loginView();
                         }
                     }                    

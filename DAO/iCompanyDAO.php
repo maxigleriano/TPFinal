@@ -12,7 +12,9 @@
 
         public function delete(Company $company);
 
-        public function getCompany($id);
+        public function getCompany($email);
+
+        public function getCompanyById($id);
 
         public function getAll();
     }

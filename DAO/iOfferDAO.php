@@ -10,6 +10,8 @@
 
         public function modify(Offer $offer);
 
+        public function delete(Offer $offer);
+
         public function getOffer($id);
 
         public function getAll();
