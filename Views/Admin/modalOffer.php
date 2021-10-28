@@ -54,7 +54,7 @@
           </select>
 
           <label for="career">Carrera</label>
-          <select name="career" id="career"class="form-control form-control-lg" onchange="getPositions()" required>
+          <select name="career" id="career<?php echo $offer->getId() ?>"class="form-control form-control-lg" onchange="getPositions(<?php echo $offer->getId() ?>)" required>
             <option value="<?php echo $offer->getCareer()->getId() ?>"><?php echo $offer->getCareer()->getDescription() ?></option> 
                         
             <?php foreach($careerList as $career) { ?>
@@ -67,7 +67,7 @@
           <?php $positionList = $this->positionDAO->getJobPositionsByCareer($offer->getCareer()->getId()) ?>
 
           <label for="position">Posición</label>
-          <select name="position" id="position" class="form-control form-control-lg" required>
+          <select name="position" id="position<?php echo $offer->getId() ?>" class="form-control form-control-lg" required>
             <option value="<?php echo $offer->getPosition()->getId() ?>"><?php echo $offer->getPosition()->getDescription() ?></option>
 
             <?php foreach($positionList as $position) { ?>

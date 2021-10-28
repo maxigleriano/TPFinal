@@ -49,19 +49,19 @@
                 </div>
             </section>
         </div>
-        
     </main>
 
     <script type="text/javascript">
-        function getPositions() {
-            let career = document.getElementById("career").value;
+        function getPositions(id) {
+            document.getElementById("position"+id).innerHTML = "<option disabled selected value=''>Cargando opciones</option>";
+            let career = document.getElementById("career"+id).value;
 
             $.ajax({
                 url: "<?php echo FRONT_ROOT ?>Ajax/ajax.php",
                 type: "POST",
                 data: {career: career},
                 success: function(response) {
-                    $("#position").html(response);
+                    $("#position"+id).html(response);
                 }
             })
         }

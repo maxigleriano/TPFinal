@@ -111,14 +111,14 @@
     
                     if($todayDate <= $beginningDate) {
                         if($beginningDate <= $endingDate) {
-                            $_position = $this->positionDAO->getJobPosition($position);
+                            $position = $this->positionDAO->getJobPosition($position);
     
-                            if($_position->getCareer() == $career) {
+                            if($position->getCareer() == $career) {
                                 $offer = new Offer();
                                 $offer->setId($id);
                                 $offer->setCompany($company);
                                 $offer->setCareer($career);
-                                $offer->setPosition($_position->getId());
+                                $offer->setPosition($position->getId());
                                 $offer->setBeginningDate($beginningDate);
                                 $offer->setEndingDate($endingDate);
         

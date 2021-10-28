@@ -48,6 +48,7 @@
 
     <script type="text/javascript">
         function getPositions() {
+            document.getElementById("position").innerHTML = "<option disabled selected value=''>Cargando opciones</option>";
             let career = document.getElementById("career").value;
 
             $.ajax({
