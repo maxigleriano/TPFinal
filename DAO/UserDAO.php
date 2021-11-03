@@ -32,30 +32,6 @@
             }
         }
 
-        public function modify(User $user) 
-        {
-            try
-            {
-                $query = "UPDATE " . $this->tableName . " SET user_name = :user_name, user_last_name = :user_last_name, user_email = :user_email, user_password = :user_password, user_phone = :user_phone WHERE (user_id = :user_id);";
-
-                $this->connection = Connection::GetInstance();
-
-                $parameters["user_id"] = $user->getId();
-                $parameters["user_name"] = $user->getName();
-                $parameters["user_last_name"] = $user->getLastName();
-                $parameters["user_email"] = $user->getEmail();
-                $parameters["user_password"] = $user->getPass();
-                $parameters["user_phone"] = $user->getPhoneNumber();
-
-                $this->connection->ExecuteNonQuery($query,$parameters);
-
-            }
-            catch(PDOException $e)
-            {
-                echo $e->getMessage();
-            }
-        }
-
         public function getUser($email) 
         {
             try {

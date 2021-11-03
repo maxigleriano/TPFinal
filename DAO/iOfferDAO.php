@@ -14,5 +14,9 @@
 
         public function getOffer($id);
 
+        public function getByCareer($careerId);
+
+        public function getByCompany($companyId);
+
         public function getAll();
     }

@@ -9,4 +9,6 @@
         public function getAll();
 
         public function getJobPosition($id);
+
+        public function getJobPositionsByCareer($career);
     }

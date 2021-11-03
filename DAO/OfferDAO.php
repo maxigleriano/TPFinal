@@ -94,6 +94,52 @@
             }
         }
 
+        public function getByCareer($careerId) {
+            try {
+                $parameters['career_id'] = $careerId;
+                
+                $query = "SELECT * FROM " . $this->tableName . " WHERE (career_id = :career_id);";
+                
+                $this->connection = Connection::GetInstance(); 
+
+                $resultSet = $this->connection->Execute($query, $parameters);
+                
+                if($resultSet) {
+                    $newResultSet = $this->mapear($resultSet);
+
+                    return  $newResultSet;
+                }
+                return false;
+            }
+            
+            catch(PDOException $e) {
+                    echo $e->getMessage();
+            }
+        }
+
+        public function getByCompany($companyId) {
+            try {
+                $parameters['company_id'] = $companyId;
+                
+                $query = "SELECT * FROM " . $this->tableName . " WHERE (company_id = :company_id);";
+                
+                $this->connection = Connection::GetInstance(); 
+
+                $resultSet = $this->connection->Execute($query, $parameters);
+                
+                if($resultSet) {
+                    $newResultSet = $this->mapear($resultSet);
+
+                    return  $newResultSet;
+                }
+                return false;
+            }
+            
+            catch(PDOException $e) {
+                    echo $e->getMessage();
+            }
+        }
+
         public function getAll() {
             try {
                 $query = "SELECT * FROM " . $this->tableName;

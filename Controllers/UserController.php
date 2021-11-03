@@ -44,6 +44,7 @@
                         if($student->getActive())
                         {
                             $_SESSION["loggedUser"] = $user;
+                            $_SESSION["student"] = $student;
                             $this->index();
                         }
                         else
@@ -76,32 +77,48 @@
             $this->userDAO->add($user);
         }
 
-        public function addNewUser($email, $pass1, $pass2)
+        public function addNewUser($email, $pass1, $pass2, $role=2)
         {
             if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 if(!$this->userDAO->getUser($email)) {                   
                     if($pass1 == $pass2) {
-                        $student = $this->studentDAO->getStudent($email);
+                        if($role == 2) {
+                            $student = $this->studentDAO->getStudent($email);
     
-                        if($student && $student->getActive()) {
+                            if($student && $student->getActive()) {
+                                $user = new User();
+                                $user->setEmail($email);
+                                $user->setPass(password_hash($pass1, PASSWORD_DEFAULT));
+                                $user->setRole($role);
+                                $user->setName($student->getName());
+                                $user->setLastName($student->getLastName());
+                                $user->setPhoneNumber($student->getPhoneNumber());
+            
+                                $this->userDAO->add($user);
+        
+                                echo "<script> if(confirm('Usuario registrado correctamente.')); </script>";  
+                            
+                                $this->Index();
+        
+                            } else {
+                                echo "<script> if(confirm('El email no corresponde con ningun estudiante o no se encuentra activo. Por favor vuelva a intentarlo.')); </script>"; 
+                                $this->signup();  
+                            }
+                        } else {
                             $user = new User();
                             $user->setEmail($email);
                             $user->setPass(password_hash($pass1, PASSWORD_DEFAULT));
-                            $user->setRole(2);
-                            $user->setName($student->getName());
-                            $user->setLastName($student->getLastName());
-                            $user->setPhoneNumber($student->getPhoneNumber());
+                            $user->setRole($role);
+                            $user->setName("");
+                            $user->setLastName("");
+                            $user->setPhoneNumber("");
         
                             $this->userDAO->add($user);
     
                             echo "<script> if(confirm('Usuario registrado correctamente.')); </script>";  
                         
-                            $this->loginView();
-    
-                        } else {
-                            echo "<script> if(confirm('El email no corresponde con ningun estudiante o no se encuentra activo. Por favor vuelva a intentarlo.')); </script>"; 
-                            $this->signup();  
-                        }
+                            $this->Index();
+                        }   
                     } else {
                         echo "<script> if(confirm('Las contraseñas no coinciden. Por favor vuelva a intentarlo.')); </script>"; 
                         $this->signup(); 
@@ -124,13 +141,36 @@
             $this->loginView();
         }
 
-        public function index()
+        public function Index($message = "")
         {
-            require_once(VIEWS_PATH . "index.php");
+            if(isset($_SESSION["loggedUser"]))
+            {
+                if($_SESSION["loggedUser"]->getRole() == 1) {
+                    require_once(VIEWS_PATH . "Admin/adminView.php");
+                } else {
+                    $student = $this->studentDAO->getStudent($_SESSION["loggedUser"]->getEmail());
+    
+                    $career = $this->careerDAO->getCareer($student->getCareer());
+                    $student->setCareer($career);
+                        
+                    require_once(VIEWS_PATH . "studentInfo.php");
+                }
+            } else {
+                require_once(VIEWS_PATH . "login.php");
+            }
         } 
 
         public function loginView()
         {
             require_once(VIEWS_PATH . "login.php");
         } 
+
+        private function isAdmin()
+        {
+            if(isset($_SESSION["loggedUser"]) && ($_SESSION["loggedUser"]->getRole() == 1)) {
+                return true;
+            } else {
+                return false;
+            }
+        }   
     }

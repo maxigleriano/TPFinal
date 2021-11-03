@@ -7,13 +7,23 @@
 
     use Models\User as User;
 
+    use Models\Student as Student;
+    use DAO\StudentDAO as StudentDAO;
+
+    use Models\Career as Career;
+    use DAO\CareerDAO as CareerDAO;
+
     class CompanyController
     {
         private $companyDAO;
+        private $careerDAO;
+        private $studentDAO;
 
         public function __construct()
         {
             $this->companyDAO = new CompanyDAO();
+            $this->careerDAO = new CareerDAO();
+            $this->studentDAO = new StudentDAO();
         }
 
         public function adminVIew()
@@ -112,14 +122,14 @@
 
         public function list()
         {
-            if($this->isAdmin()) {
+            if(isset($_SESSION["loggedUser"])) {
                 $companyList = $this->companyDAO->getAll();
 
                 if($companyList) {
-                    require_once(VIEWS_PATH . "Admin/listCompany.php");
+                    require_once(VIEWS_PATH . "listCompany.php");
                 } else {
                     echo "<script> if(confirm('No hay empresas para mostrar.')); </script>";
-                    $this->adminView();
+                    $this->Index();
                 }
                 
             } else {
@@ -127,15 +137,24 @@
             }
         }
 
-        private function Index($message = "")
+        public function Index($message = "")
         {
             if(isset($_SESSION["loggedUser"]))
             {
-                require_once(VIEWS_PATH . "index.php");
+                if($_SESSION["loggedUser"]->getRole() == 1) {
+                    require_once(VIEWS_PATH . "Admin/adminView.php");
+                } else {
+                    $student = $this->studentDAO->getStudent($_SESSION["loggedUser"]->getEmail());
+    
+                    $career = $this->careerDAO->getCareer($student->getCareer());
+                    $student->setCareer($career);
+                        
+                    require_once(VIEWS_PATH . "studentInfo.php");
+                }
             } else {
                 require_once(VIEWS_PATH . "login.php");
             }
-        }  
+        } 
 
         private function isAdmin()
         {

@@ -21,10 +21,9 @@
             $this->careerDAO = new CareerDAO();
         }
 
-        public function studentInfo() 
+        public function studentInfo($email) 
         {
             if(isset($_SESSION["loggedUser"])) {
-                $email = $_SESSION["loggedUser"]->getEmail();
                 $student = $this->studentDAO->getStudent($email);
     
                 if($student) {
@@ -44,9 +43,18 @@
         {
             if(isset($_SESSION["loggedUser"]))
             {
-                require_once(VIEWS_PATH . "index.php");
+                if($_SESSION["loggedUser"]->getRole() == 1) {
+                    require_once(VIEWS_PATH . "Admin/adminView.php");
+                } else {
+                    $student = $this->studentDAO->getStudent($_SESSION["loggedUser"]->getEmail());
+    
+                    $career = $this->careerDAO->getCareer($student->getCareer());
+                    $student->setCareer($career);
+                        
+                    require_once(VIEWS_PATH . "studentInfo.php");
+                }
             } else {
                 require_once(VIEWS_PATH . "login.php");
             }
-        }   
+        } 
     }

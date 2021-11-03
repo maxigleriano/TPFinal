@@ -16,12 +16,16 @@
     use Models\JobPosition as JobPosition;
     use DAO\JobPositionDAO as JobPositionDAO;
 
+    use Models\Student as Student;
+    use DAO\StudentDAO as StudentDAO;
+
     class OfferController
     {
         private $offerDAO;
         private $companyDAO;
         private $careerDAO;
         private $positionDAO;
+        private $studentDAO;
 
         public function __construct()
         {
@@ -29,6 +33,7 @@
             $this->companyDAO = new CompanyDAO();
             $this->careerDAO = new CareerDAO();
             $this->positionDAO = new JobPositionDAO();
+            $this->studentDAO = new StudentDAO();
         }
 
         public function adminView()
@@ -62,11 +67,10 @@
         public function add($company, $career, $position, $beginningDate, $endingDate)
         {
             if($this->isAdmin()) {
-                $todayDate = getdate();
-                $todayDate = $todayDate["year"] . "-" . $todayDate["mon"] . "-" . $todayDate["mday"];
+                $todayDate = date("Y-m-d");
 
-                if($todayDate <= $beginningDate) {
-                    if($beginningDate <= $endingDate) {
+                if($beginningDate >= $todayDate) {
+                    if($beginningDate < $endingDate) {
                         $position = $this->positionDAO->getJobPosition($position);
 
                         if($position->getCareer() == $career) {
@@ -100,17 +104,41 @@
             }
         }
 
+        public function modifyView($id) 
+        {
+            if($this->isAdmin()) {
+                $offer = $this->offerDAO->getOffer($id);
+
+                if($offer) {
+                    $company = $this->companyDAO->getCompanyById($offer->getCompany());
+                    $companyList = $this->companyDAO->getAll();
+
+                    $career = $this->careerDAO->getCareer($offer->getCareer());
+                    $careerList = $this->careerDAO->getAll();
+
+                    $position = $this->positionDAO->getJobPosition($offer->getPosition());
+                    $positionList = $this->positionDAO->getJobPositionsByCareer($offer->getCareer());
+
+                    require_once(VIEWS_PATH . "Admin/modifyOffer.php");
+                } else {
+                    echo "<script> if(confirm('No se encontró la oferta seleccionada. Por favor vuelva a intentarlo.')); </script>";
+                    $this->list();
+                }
+            } else {
+                $this->Index();
+            }
+        }
+
         public function modify($id, $company, $career, $position, $beginningDate, $endingDate) 
         {
             if($this->isAdmin()) {
                 $offer = $this->offerDAO->getOffer($id);
 
                 if($offer) {
-                    $todayDate = getdate();
-                    $todayDate = $todayDate["year"] . "-" . $todayDate["mon"] . "-" . $todayDate["mday"];
+                    $todayDate = date("Y-m-d");
     
-                    if($todayDate <= $beginningDate) {
-                        if($beginningDate <= $endingDate) {
+                    if($beginningDate >= $todayDate) {
+                        if($beginningDate < $endingDate) {
                             $position = $this->positionDAO->getJobPosition($position);
     
                             if($position->getCareer() == $career) {
@@ -169,13 +197,10 @@
 
         public function list()
         {
-            if($this->isAdmin()) {
+            if(isset($_SESSION["loggedUser"])) {
                 $offerList = $this->offerDAO->getAll();
 
-                if($offerList) {
-                    $companyList = $this->companyDAO->getAll();
-                    $careerList = $this->careerDAO->getAll();
-                    
+                if($offerList) {                    
                     foreach($offerList as $offer) {
                         $company = $this->companyDAO->getCompanyById($offer->getCompany());
                         $offer->setCompany($company);
@@ -186,10 +211,10 @@
                         $position = $this->positionDAO->getJobPosition($offer->getPosition());
                         $offer->setPosition($position);
                     }
-                    require_once(VIEWS_PATH . "Admin/listOffer.php");
+                    require_once(VIEWS_PATH . "listOffer.php");
                 } else {
                     echo "<script> if(confirm('No hay ofertas para mostrar.')); </script>";
-                    $this->adminView();
+                    $this->Index();
                 }
                 
             } else {
@@ -197,15 +222,78 @@
             }
         }
 
-        private function Index($message = "")
+        public function listByCareer($careerId)
+        {
+            if(isset($_SESSION["loggedUser"])) {
+                $offerList = $this->offerDAO->getByCareer($careerId);
+
+                if($offerList) {                    
+                    foreach($offerList as $offer) {
+                        $company = $this->companyDAO->getCompanyById($offer->getCompany());
+                        $offer->setCompany($company);
+    
+                        $career = $this->careerDAO->getCareer($offer->getCareer());
+                        $offer->setCareer($career);
+    
+                        $position = $this->positionDAO->getJobPosition($offer->getPosition());
+                        $offer->setPosition($position);
+                    }
+                    require_once(VIEWS_PATH . "listOffer.php");
+                } else {
+                    echo "<script> if(confirm('No hay ofertas activas para tu carrera.')); </script>";
+                    $this->Index();
+                }
+                
+            } else {
+                $this->Index();
+            }
+        }
+
+        public function listByCompany($companyId)
+        {
+            if(isset($_SESSION["loggedUser"])) {
+                $offerList = $this->offerDAO->getByCompany($companyId);
+
+                if($offerList) {                    
+                    foreach($offerList as $offer) {
+                        $company = $this->companyDAO->getCompanyById($offer->getCompany());
+                        $offer->setCompany($company);
+    
+                        $career = $this->careerDAO->getCareer($offer->getCareer());
+                        $offer->setCareer($career);
+    
+                        $position = $this->positionDAO->getJobPosition($offer->getPosition());
+                        $offer->setPosition($position);
+                    }
+                    require_once(VIEWS_PATH . "listOffer.php");
+                } else {
+                    echo "<script> if(confirm('Estra empresa no tiene ofertas activas.')); </script>";
+                    $this->Index();
+                }
+                
+            } else {
+                $this->Index();
+            }
+        }
+
+        public function Index($message = "")
         {
             if(isset($_SESSION["loggedUser"]))
             {
-                require_once(VIEWS_PATH . "index.php");
+                if($_SESSION["loggedUser"]->getRole() == 1) {
+                    require_once(VIEWS_PATH . "Admin/adminView.php");
+                } else {
+                    $student = $this->studentDAO->getStudent($_SESSION["loggedUser"]->getEmail());
+    
+                    $career = $this->careerDAO->getCareer($student->getCareer());
+                    $student->setCareer($career);
+                        
+                    require_once(VIEWS_PATH . "studentInfo.php");
+                }
             } else {
                 require_once(VIEWS_PATH . "login.php");
             }
-        }  
+        } 
 
         private function isAdmin()
         {

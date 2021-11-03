@@ -151,4 +151,9 @@
 
                 return $this;
         }
+
+        public function getNameAndLast()
+        {
+                return $this->name . " " . $this->lastName;
+        }
     }
