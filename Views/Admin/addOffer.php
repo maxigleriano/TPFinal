@@ -1,7 +1,7 @@
 <?php require_once(VIEWS_PATH . "nav.php") ?>
 
 <body>
-    <main class="d-flex align-items-center justify-content-center height-100" >
+    <main class="d-flex align-items-center justify-content-center height-90" >
         <div class="content">
             <h2>Agregar Oferta</h2>
 

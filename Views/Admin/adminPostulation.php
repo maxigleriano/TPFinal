@@ -2,7 +2,7 @@
 
 <body>
     <main>
-        <div class="contenedor">
+        <div class="container mt-5">
             <h1>POSTULACIONES</h1>
             <a href="<?php echo FRONT_ROOT ?>Postulation/list">Lista</br></a>
         </div>
