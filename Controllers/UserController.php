@@ -92,7 +92,6 @@
                                 $user->setRole($role);
                                 $user->setName($student->getName());
                                 $user->setLastName($student->getLastName());
-                                $user->setPhoneNumber($student->getPhoneNumber());
             
                                 $this->userDAO->add($user);
         
@@ -111,7 +110,6 @@
                             $user->setRole($role);
                             $user->setName("");
                             $user->setLastName("");
-                            $user->setPhoneNumber("");
         
                             $this->userDAO->add($user);
     
@@ -129,7 +127,7 @@
                 }
             } else {
                 echo "<script> if(confirm('Formato de email incorrecto. Por favor vuelva a intentarlo.')); </script>"; 
-                $this->signup();   
+                $this->signup();
             }
             
         }
@@ -143,9 +141,9 @@
 
         public function Index($message = "")
         {
-            if(isset($_SESSION["loggedUser"]))
+            if($this->userHelper->isLogged())
             {
-                if($_SESSION["loggedUser"]->getRole() == 1) {
+                if($this->userHelper->isAdmin()) {
                     require_once(VIEWS_PATH . "Admin/adminView.php");
                 } else {
                     $student = $this->studentDAO->getStudent($_SESSION["loggedUser"]->getEmail());
@@ -158,19 +156,10 @@
             } else {
                 require_once(VIEWS_PATH . "login.php");
             }
-        } 
+        }
 
         public function loginView()
         {
             require_once(VIEWS_PATH . "login.php");
         } 
-
-        private function isAdmin()
-        {
-            if(isset($_SESSION["loggedUser"]) && ($_SESSION["loggedUser"]->getRole() == 1)) {
-                return true;
-            } else {
-                return false;
-            }
-        }   
     }

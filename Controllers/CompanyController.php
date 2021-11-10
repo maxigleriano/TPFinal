@@ -13,22 +13,26 @@
     use Models\Career as Career;
     use DAO\CareerDAO as CareerDAO;
 
+    use Helpers\UserHelper as UserHelper;
+
     class CompanyController
     {
         private $companyDAO;
         private $careerDAO;
         private $studentDAO;
+        private $userHelper;
 
         public function __construct()
         {
             $this->companyDAO = new CompanyDAO();
             $this->careerDAO = new CareerDAO();
             $this->studentDAO = new StudentDAO();
+            $this->userHelper = new UserHelper();
         }
 
         public function adminVIew()
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 require_once(VIEWS_PATH . "Admin/adminCompany.php");
             } else {
                 $this->Index();
@@ -37,7 +41,7 @@
 
         public function addVIew()
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 require_once(VIEWS_PATH . "Admin/addCompany.php");
             } else {
                 $this->Index();
@@ -46,11 +50,13 @@
 
         public function add($name, $city, $address, $email, $phoneNumber, $cuit)
         {
-            if($this->isAdmin()) {
-                $company = $this->companyDAO->getCompany($email);
+            if($this->userHelper->isAdmin()) {
+                $findEmail = $this->companyDAO->getCompany($email);
+                $findName = $this->companyDAO->getCompanyByName($name);
+                $findCuit = $this->companyDAO->getCompanyByCuit($cuit);
 
-                if($company) {
-                    echo "<script> if(confirm('El email ya esta registrado. Por favor vuelva a intentarlo.')); </script>";
+                if($findEmail || $findName || $findCuit) {
+                    echo "<script> if(confirm('Eesta empresa ya está registrada. Por favor vuelva a intentarlo.')); </script>";
 
                     $this->addVIew();
                 } else {
@@ -75,7 +81,7 @@
 
         public function modify($id, $name, $city, $address, $email, $phoneNumber, $cuit) 
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 $company = $this->companyDAO->getCompanyById($id);
 
                 if($company) {
@@ -103,7 +109,7 @@
 
         public function delete($id)
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 $company = $this->companyDAO->getCompanyById($id);
 
                 if($company) {
@@ -122,7 +128,7 @@
 
         public function list()
         {
-            if(isset($_SESSION["loggedUser"])) {
+            if($this->userHelper->isLogged()) {
                 $companyList = $this->companyDAO->getAll();
 
                 if($companyList) {
@@ -139,9 +145,9 @@
 
         public function Index($message = "")
         {
-            if(isset($_SESSION["loggedUser"]))
+            if($this->userHelper->isLogged())
             {
-                if($_SESSION["loggedUser"]->getRole() == 1) {
+                if($this->userHelper->isAdmin()) {
                     require_once(VIEWS_PATH . "Admin/adminView.php");
                 } else {
                     $student = $this->studentDAO->getStudent($_SESSION["loggedUser"]->getEmail());
@@ -154,16 +160,5 @@
             } else {
                 require_once(VIEWS_PATH . "login.php");
             }
-        } 
-
-        private function isAdmin()
-        {
-            if(isset($_SESSION["loggedUser"]) && ($_SESSION["loggedUser"]->getRole() == 1)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-         
+        }   
     }

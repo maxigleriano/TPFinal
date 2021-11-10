@@ -19,6 +19,8 @@
     use Models\Student as Student;
     use DAO\StudentDAO as StudentDAO;
 
+    use Helpers\UserHelper as UserHelper;
+
     class OfferController
     {
         private $offerDAO;
@@ -26,6 +28,7 @@
         private $careerDAO;
         private $positionDAO;
         private $studentDAO;
+        private $userHelper;
 
         public function __construct()
         {
@@ -34,11 +37,12 @@
             $this->careerDAO = new CareerDAO();
             $this->positionDAO = new JobPositionDAO();
             $this->studentDAO = new StudentDAO();
+            $this->userHelper = new UserHelper();
         }
 
         public function adminView()
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 require_once(VIEWS_PATH . "Admin/adminOffer.php");
             } else {
                 $this->Index();
@@ -47,7 +51,7 @@
 
         public function addView()
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 $companyList = $this->companyDAO->getAll();
 
                 if($companyList) {
@@ -66,7 +70,7 @@
 
         public function add($company, $career, $position, $beginningDate, $endingDate)
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 $todayDate = date("Y-m-d");
 
                 if($beginningDate >= $todayDate) {
@@ -106,7 +110,7 @@
 
         public function modifyView($id) 
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 $offer = $this->offerDAO->getOffer($id);
 
                 if($offer) {
@@ -131,7 +135,7 @@
 
         public function modify($id, $company, $career, $position, $beginningDate, $endingDate) 
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 $offer = $this->offerDAO->getOffer($id);
 
                 if($offer) {
@@ -178,7 +182,7 @@
 
         public function delete($id)
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 $offer = $this->offerDAO->getOffer($id);
 
                 if($offer) {
@@ -197,7 +201,7 @@
 
         public function list()
         {
-            if(isset($_SESSION["loggedUser"])) {
+            if($this->userHelper->isLogged()) {
                 $offerList = $this->offerDAO->getAll();
 
                 if($offerList) {                    
@@ -224,7 +228,7 @@
 
         public function listByCareer($careerId)
         {
-            if(isset($_SESSION["loggedUser"])) {
+            if($this->userHelper->isLogged()) {
                 $offerList = $this->offerDAO->getByCareer($careerId);
 
                 if($offerList) {                    
@@ -251,7 +255,7 @@
 
         public function listByCompany($companyId)
         {
-            if(isset($_SESSION["loggedUser"])) {
+            if($this->userHelper->isLogged()) {
                 $offerList = $this->offerDAO->getByCompany($companyId);
 
                 if($offerList) {                    
@@ -278,9 +282,9 @@
 
         public function Index($message = "")
         {
-            if(isset($_SESSION["loggedUser"]))
+            if($this->userHelper->isLogged())
             {
-                if($_SESSION["loggedUser"]->getRole() == 1) {
+                if($this->userHelper->isAdmin()) {
                     require_once(VIEWS_PATH . "Admin/adminView.php");
                 } else {
                     $student = $this->studentDAO->getStudent($_SESSION["loggedUser"]->getEmail());
@@ -293,14 +297,5 @@
             } else {
                 require_once(VIEWS_PATH . "login.php");
             }
-        } 
-
-        private function isAdmin()
-        {
-            if(isset($_SESSION["loggedUser"]) && ($_SESSION["loggedUser"]->getRole() == 1)) {
-                return true;
-            } else {
-                return false;
-            }
-        }      
+        }   
     }

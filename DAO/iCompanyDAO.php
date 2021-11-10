@@ -16,5 +16,9 @@
 
         public function getCompanyById($id);
 
+        public function getCompanyByName($name);
+
+        public function getCompanyByCuit($cuit);
+
         public function getAll();
     }

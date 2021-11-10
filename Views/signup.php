@@ -19,14 +19,7 @@
                     <input type="password" name="pass2" class="form-control form-control-lg" placeholder="Ingresar constraseña" required>
                 </div>
                 <?php if($this->isAdmin()) { ?>
-                    <div class="form-group">
-                        <label for="role">Rol</label>
-                        <select name="role" id="role"class="form-control form-control-lg" required>
-                            <option disabled selected value="">Seleccione una</option>
-                            <option value="2">Estudiante</option>
-                            <option value="1">Adminstrador</option>
-                        </select>
-                    </div>
+                    <input type="hidden" name="role" value="1" required>
                 <?php } ?>
                 <button class="btn btn-primary btn-block btn-lg" type="submit">Aceptar</button>
            </form>

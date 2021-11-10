@@ -23,6 +23,8 @@
     use Models\Career as Career;
     use DAO\CareerDAO as CareerDAO;
 
+    use Helpers\UserHelper as UserHelper;
+
     class PostulationController
     {
         private $postulationDAO;
@@ -32,6 +34,7 @@
         private $userDAO;
         private $studentDAO;
         private $careerDAO;
+        private $userHelper;
 
         public function __construct()
         {
@@ -42,11 +45,12 @@
             $this->userDAO = new UserDAO();
             $this->studentDAO = new StudentDAO();
             $this->careerDAO = new CareerDAO();
+            $this->userHelper = new UserHelper();
         }
 
         public function adminView()
         {
-            if($this->isAdmin()) {
+            if($this->userHelper->isAdmin()) {
                 require_once(VIEWS_PATH . "Admin/adminPostulation.php");
             } else {
                 $this->Index();
@@ -55,7 +59,7 @@
 
         public function addView($offerId)
         {
-            if($this->isStudent()) {
+            if($this->userHelper->isStudent()) {
                 $offer = $this->offerDAO->getOffer($offerId);
 
                 if($offer) {
@@ -75,7 +79,7 @@
 
         public function add($offer, $curriculum, $message="")
         {
-            if($this->isStudent()) {
+            if($this->userHelper->isStudent()) {
                 $user = $_SESSION["loggedUser"];
                 $postulation = $this->postulationDAO->getPostulationByUser($user->getId());
 
@@ -131,9 +135,28 @@
             } 
         } 
 
+        public function delete($id)
+        {
+            if($this->userHelper->isStudent()) {
+                $postulation = $this->postulationDAO->getPostulation($id);
+
+                if($postulation) {
+                    $this->postulationDAO->delete($postulation);
+    
+                    echo "<script> if(confirm('Postulación eliminada con exito.')); </script>";
+                    $this->list();
+                } else {
+                    echo "<script> if(confirm('No se encontró la postulación seleccionada. Por favor vuelva a intentarlo.')); </script>";
+                    $this->list();
+                }
+            } else {
+                $this->Index();
+            }    
+        }
+
         public function list()
         {
-            if(isset($_SESSION["loggedUser"])) {
+            if($this->userHelper->isLogged()) {
                 $postulationList = $this->postulationDAO->getAll();
 
                 if($postulationList) {
@@ -165,7 +188,7 @@
 
         public function listByOffer($offerId)
         {
-            if(isset($_SESSION["loggedUser"])) {
+            if($this->userHelper->isLogged()) {
                 $postulationList = $this->postulationDAO->getPostulationByOffer($offerId);
 
                 if($postulationList) {
@@ -197,7 +220,7 @@
 
         public function listByUser($userId)
         {
-            if(isset($_SESSION["loggedUser"])) {
+            if($this->userHelper->isLogged()) {
                 $postulationList = $this->postulationDAO->getPostulationByuser($userId);
 
                 if($postulationList) {
@@ -229,9 +252,9 @@
 
         public function Index($message = "")
         {
-            if(isset($_SESSION["loggedUser"]))
+            if($this->userHelper->isLogged())
             {
-                if($_SESSION["loggedUser"]->getRole() == 1) {
+                if($this->userHelper->isAdmin()) {
                     require_once(VIEWS_PATH . "Admin/adminView.php");
                 } else {
                     $student = $this->studentDAO->getStudent($_SESSION["loggedUser"]->getEmail());
@@ -244,23 +267,5 @@
             } else {
                 require_once(VIEWS_PATH . "login.php");
             }
-        } 
-
-        private function isAdmin()
-        {
-            if(isset($_SESSION["loggedUser"]) && ($_SESSION["loggedUser"]->getRole() == 1)) {
-                return true;
-            } else {
-                return false;
-            }
-        }   
-
-        private function isStudent()
-        {
-            if(isset($_SESSION["student"])) {
-                return true;
-            } else {
-                return false;
-            }
-        }  
+        }
     }

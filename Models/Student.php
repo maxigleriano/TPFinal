@@ -13,6 +13,7 @@
         private $gender;
         private $birthDate;
         private $active;
+        private $phoneNumber;
 
         /**
          * Get the value of studentId
@@ -150,6 +151,26 @@
         public function setActive($active)
         {
                 $this->active = $active;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of phoneNumber
+         */ 
+        public function getPhoneNumber()
+        {
+                return $this->phoneNumber;
+        }
+
+        /**
+         * Set the value of phoneNumber
+         *
+         * @return  self
+         */ 
+        public function setPhoneNumber($phoneNumber)
+        {
+                $this->phoneNumber = $phoneNumber;
 
                 return $this;
         }

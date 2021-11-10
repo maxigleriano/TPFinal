@@ -13,14 +13,13 @@
         public function add(User $user) 
         {
             try {
-                $query = "INSERT INTO " . $this->tableName . " (user_role, user_name, user_last_name, user_email, user_password, user_phone) VALUES (:user_role, :user_name, :user_last_name, :user_email, :user_password, :user_phone);";
+                $query = "INSERT INTO " . $this->tableName . " (user_role, user_name, user_last_name, user_email, user_password) VALUES (:user_role, :user_name, :user_last_name, :user_email, :user_password);";
 
                 $parameters["user_role"] = $user->getRole();
                 $parameters["user_name"] = $user->getName();
                 $parameters["user_last_name"] = $user->getLastName();
                 $parameters["user_email"] = $user->getEmail();
                 $parameters["user_password"] = $user->getPass();
-                $parameters["user_phone"] = $user->getPhoneNumber();
 
                 $this->connection = Connection::GetInstance();
                 
@@ -115,7 +114,6 @@
                 $user->setLastName($p['user_last_name']);
                 $user->setEmail($p['user_email']);
                 $user->setPass($p['user_password']);
-                $user->setPhoneNumber($p['user_phone']);
 
                 return $user;
             }, $value);

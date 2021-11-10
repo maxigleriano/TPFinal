@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group">
                     <label for="cuit">CUIT</label>
-                    <input type="number" name="cuit" class="form-control form-control-lg" placeholder="Ingresar CUIT" required>
+                    <input type="number" name="cuit" class="form-control form-control-lg" max="99999999999" placeholder="Ingresar CUIT" required>
                 </div>
                 <button class="btn btn-primary btn-block btn-lg" type="submit">Aceptar</button>
            </form>

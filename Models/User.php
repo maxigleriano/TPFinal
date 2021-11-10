@@ -10,7 +10,6 @@
         private $lastName;
         private $email;
         private $pass;
-        private $phoneNumber;
 
         /**
          * Get the value of id
@@ -128,26 +127,6 @@
         public function setPass($pass)
         {
                 $this->pass = $pass;
-
-                return $this;
-        }
-
-        /**
-         * Get the value of phoneNumber
-         */ 
-        public function getPhoneNumber()
-        {
-                return $this->phoneNumber;
-        }
-
-        /**
-         * Set the value of phoneNumber
-         *
-         * @return  self
-         */ 
-        public function setPhoneNumber($phoneNumber)
-        {
-                $this->phoneNumber = $phoneNumber;
 
                 return $this;
         }

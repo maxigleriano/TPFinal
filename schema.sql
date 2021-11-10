@@ -31,7 +31,7 @@ create table offers (
     career_id int not null,
     company_id int not null,
     constraint PK_offers primary key (offer_id),
-    constraint FK_offer_company foreign key (company_id) references companies (company_id)
+    constraint FK_offer_company foreign key (company_id) references companies (company_id) on delete cascade
 );
 
 create table users (
@@ -41,7 +41,6 @@ create table users (
     user_last_name varchar(50),
     user_email varchar(50) not null,
     user_password varchar(255) not null,
-    user_phone int,
     constraint PK_users primary key (user_id),
     constraint FK_user_role foreign key (user_role) references user_roles (role_id)
 );
@@ -56,5 +55,5 @@ create table postulations (
     user_message varchar(500),
     constraint PK_postulations primary key (postulation_id),
     constraint FK_postulation_user foreign key (user_id) references users (user_id),
-    constraint FK_postulation_offer foreign key (offer_id) references offers (offer_id)
+    constraint FK_postulation_offer foreign key (offer_id) references offers (offer_id) on delete cascade
 );

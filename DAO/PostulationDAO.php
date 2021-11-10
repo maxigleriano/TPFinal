@@ -28,6 +28,25 @@
             }
         }
 
+        public function delete(Postulation $postulation)
+        {
+            try 
+            {
+                $query = "DELETE FROM " . $this->tableName . " WHERE (postulation_id = :postulation_id);";
+
+                $this->connection = Connection::GetInstance();
+
+                $parameters['postulation_id'] = $postulation->getId();
+
+                $this->connection->ExecuteNonQuery($query,$parameters);
+
+            }
+            catch(PDOException $e)
+            {
+                echo $e->getMessage();
+            }
+        }
+
         public function getPostulation($id) {
             try {
                 $parameters['postulation_id'] = $id;

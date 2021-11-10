@@ -8,6 +8,8 @@
     {
         public function add(Postulation $postulation);
 
+        public function delete(Postulation $postulation);
+
         public function getPostulation($id);
 
         public function getPostulationByUser($userId);

@@ -124,6 +124,54 @@
             }
         }
 
+        public function getCompanyByName($name) 
+        {
+            try {
+                $parameters['company_name'] = $name;
+                
+                $query = "SELECT * FROM " . $this->tableName . " WHERE (company_name = :company_name);";
+                
+                $this->connection = Connection::GetInstance(); 
+
+                $resultSet = $this->connection->Execute($query, $parameters);
+                
+                if($resultSet) {
+                    $newResultSet = $this->mapear($resultSet);
+
+                    return  $newResultSet[0];
+                }
+                return false;
+            }
+            
+            catch(PDOException $e) {
+                    echo $e->getMessage();
+            }
+        }
+
+        public function getCompanyByCuit($cuit) 
+        {
+            try {
+                $parameters['company_cuit'] = $cuit;
+                
+                $query = "SELECT * FROM " . $this->tableName . " WHERE (company_cuit = :company_cuit);";
+                
+                $this->connection = Connection::GetInstance(); 
+
+                $resultSet = $this->connection->Execute($query, $parameters);
+                
+                if($resultSet) {
+                    $newResultSet = $this->mapear($resultSet);
+
+                    return  $newResultSet[0];
+                }
+                return false;
+            }
+            
+            catch(PDOException $e) {
+                    echo $e->getMessage();
+            }
+        }
+
         public function getAll() 
         {
             try {
