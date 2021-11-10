@@ -13,12 +13,12 @@
                         <th>Posición</th>
                         <th>Fecha de inicio</th>
                         <th>Fecha de cierre</th>
-                        <?php if($this->isAdmin()) { ?>
+                        <?php if($this->userHelper->isAdmin()) { ?>
                             <th></th>
                             <th></th>
                             <th></th>
                         <?php } ?>
-                        <?php if(!$this->isAdmin()) { ?>
+                        <?php if($this->userHelper->isStudent()) { ?>
                             <th></th>
                         <?php } ?>
                     </thead>
@@ -33,7 +33,7 @@
                             <td><?php echo date("d/m/Y", strtotime($offer->getBeginningDate())) ?></td>
                             <td><?php echo date("d/m/Y", strtotime($offer->getEndingDate())) ?></td>
                             
-                            <?php if($this->isAdmin()) { ?>
+                            <?php if($this->userHelper->isAdmin()) { ?>
                                 <td>
                                     <form action="<?php echo FRONT_ROOT . "Postulation/listByOffer/" . $offer->getId() ?>" method="get">
                                         <button type="submit" class="btn btn-success btn-sm">Ver postulaciones</button>
@@ -53,7 +53,7 @@
                                 <?php include(VIEWS_PATH . "Admin/modalOffer.php") ?>
                             <?php } ?>
                             
-                            <?php if(!$this->isAdmin()) { ?>
+                            <?php if($this->userHelper->isStudent()) { ?>
                                 <td>
                                     <form action="<?php echo FRONT_ROOT ?>Postulation/addView" method="post">
                                         <input type="hidden" name="offerId" value="<?php echo $offer->getId() ?>">

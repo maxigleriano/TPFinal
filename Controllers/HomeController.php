@@ -15,6 +15,7 @@
         private $studentDAO;
         private $careerDAO;
         private $userHelper;
+        
         public function __construct()
         {
             $this->studentDAO = new StudentDAO();

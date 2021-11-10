@@ -11,17 +11,21 @@
     use Models\Career as Career;
     use DAO\CareerDAO as CareerDAO;
 
+    use Helpers\UserHelper as UserHelper;
+
     class UserController
     {
         private $userDAO;
         private $studentDAO;
         private $careerDAO;
+        private $userHelper;
 
         public function __construct()
         {
             $this->userDAO = new UserDAO();
             $this->studentDAO = new StudentDAO();
             $this->careerDAO = new CareerDAO();
+            $this->userHelper = new UserHelper();
         }
 
         public function login($email, $pass)

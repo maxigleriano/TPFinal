@@ -15,7 +15,7 @@
                         <th>Teléfono</th>
                         <th>CUIT</th>
                         <th></th>
-                        <?php if($this->isAdmin()) { ?>
+                        <?php if($this->userHelper->isAdmin()) { ?>
                             <th></th>
                             <th></th>
                         <?php } ?>
@@ -35,7 +35,7 @@
                                     <button type="submit" class="btn btn-success btn-sm">Ver ofertas</button>
                                 </form>
                             </td>
-                            <?php if($this->isAdmin()) { ?>
+                            <?php if($this->userHelper->isAdmin()) { ?>
                                 <td>
                                     <!-- Button trigger modify modal -->
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modifyModal<?php echo $company->getId() ?>">

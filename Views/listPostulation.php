@@ -13,7 +13,7 @@
                         <th>Postulante</th>
                         <th>Curriculum</th>
                         <th>Mensaje</th>
-                        <?php if(!$this->isAdmin()) { ?>
+                        <?php if($this->userHelper->isStudent()) { ?>
                             <th></th>
                         <?php } ?>
                     </thead>
@@ -27,7 +27,7 @@
                             <td><a href="<?php echo FRONT_ROOT . "Student/studentInfo/" . $postulation->getUser()->getEmail()?>" target="_blank"><?php echo $postulation->getUser()->getNameAndLast() ?></a></td>
                             <td><a href="<?php echo UPLOADS_PATH . $postulation->getCurriculum()?>" download target="_blank"><?php echo $postulation->getCurriculum() ?></a></td>
                             <td><?php echo $postulation->getMessage() ?></td>
-                            <?php if(!$this->isAdmin()) { ?>
+                            <?php if($this->userHelper->isStudent()) { ?>
                                 <td>
                                     <!-- Button trigger delete modal -->
                                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal<?php echo $postulation->getId() ?>">

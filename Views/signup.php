@@ -18,7 +18,7 @@
                     <label for="pass2">Repetir Contraseña</label>
                     <input type="password" name="pass2" class="form-control form-control-lg" placeholder="Ingresar constraseña" required>
                 </div>
-                <?php if($this->isAdmin()) { ?>
+                <?php if($this->userHelper->isAdmin()) { ?>
                     <input type="hidden" name="role" value="1" required>
                 <?php } ?>
                 <button class="btn btn-primary btn-block btn-lg" type="submit">Aceptar</button>

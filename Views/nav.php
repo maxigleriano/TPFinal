@@ -1,6 +1,6 @@
 <nav>
-    <?php if(isset($_SESSION["loggedUser"])) { 
-        if($_SESSION["loggedUser"]->getRole() == 1) { ?>
+    <?php if($this->userHelper->isLogged()) { 
+        if($this->userHelper->isAdmin()) { ?>
             <a href="<?php echo FRONT_ROOT ?>Home/adminView">Administración</a>
             <a href="<?php echo FRONT_ROOT ?>User/signup">Registrar Usuario</a>
             <a href="<?php echo FRONT_ROOT ?>User/logout">Salir</a>
