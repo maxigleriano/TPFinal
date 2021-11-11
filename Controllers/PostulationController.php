@@ -144,10 +144,10 @@
                     $this->postulationDAO->delete($postulation);
     
                     echo "<script> if(confirm('Postulación eliminada con exito.')); </script>";
-                    $this->list();
+                    $this->listByUser($_SESSION["loggedUser"]->getId());
                 } else {
                     echo "<script> if(confirm('No se encontró la postulación seleccionada. Por favor vuelva a intentarlo.')); </script>";
-                    $this->list();
+                    $this->listByUser($_SESSION["loggedUser"]->getId());
                 }
             } else {
                 $this->Index();
@@ -156,7 +156,7 @@
 
         public function list()
         {
-            if($this->userHelper->isLogged()) {
+            if($this->userHelper->isAdmin()) {
                 $postulationList = $this->postulationDAO->getAll();
 
                 if($postulationList) {

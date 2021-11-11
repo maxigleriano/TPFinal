@@ -115,13 +115,16 @@
 
                 if($offer) {
                     $company = $this->companyDAO->getCompanyById($offer->getCompany());
+                    $offer->setCompany($company);
                     $companyList = $this->companyDAO->getAll();
 
                     $career = $this->careerDAO->getCareer($offer->getCareer());
+                    $offer->setCareer($career);
                     $careerList = $this->careerDAO->getAll();
 
                     $position = $this->positionDAO->getJobPosition($offer->getPosition());
-                    $positionList = $this->positionDAO->getJobPositionsByCareer($offer->getCareer());
+                    $offer->setPosition($position);
+                    $positionList = $this->positionDAO->getJobPositionsByCareer($offer->getCareer()->getId());
 
                     require_once(VIEWS_PATH . "Admin/modifyOffer.php");
                 } else {
