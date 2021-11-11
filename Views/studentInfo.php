@@ -4,7 +4,7 @@
     <main>
         <section id="listado" class="mb-5">
             <div class="container mt-5">
-                <h1 class="mb-4">ALUMNO</h1>
+                <h1 class="mb-4 text-center">ALUMNO</h1>
 
                 <table class="table bg-light">
                     <thead class="bg-dark text-white">

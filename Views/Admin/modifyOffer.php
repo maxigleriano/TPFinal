@@ -3,7 +3,7 @@
 <body>
     <main class="d-flex align-items-center justify-content-center height-90" >
         <div class="content">
-            <h2>Modificar Oferta</h2>
+            <h2 class="text-center">Modificar Oferta</h2>
 
             <form action="<?php echo FRONT_ROOT ?>Offer/modify" method="post" class="login-form bg-dark-alpha p-5 bg-light">
                 <input type="hidden" name="id" value="<?php echo $offer->getId() ?>">

@@ -3,7 +3,7 @@
 <body>
     <main class="d-flex align-items-center justify-content-center height-90" >
         <div class="content">
-            <h2>Agregar Postulación</h2>
+            <h2 class="text-center">Agregar Postulación</h2>
 
             <form action="<?php echo FRONT_ROOT ?>Postulation/add" method="post" enctype="multipart/form-data" class="login-form bg-dark-alpha p-5 bg-light">
                 <input type="hidden" name="offer" value="<?php echo $offer->getId() ?>" required>

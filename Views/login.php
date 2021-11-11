@@ -3,7 +3,7 @@
 <body>
     <main class="d-flex align-items-center justify-content-center height-90" >
         <div class="content">
-            <h2>Iniciar Sesión</h2>
+            <h2 class="text-center">Iniciar Sesión</h2>
 
             <form action="<?php echo FRONT_ROOT ?>User/login" method="post" class="login-form bg-dark-alpha p-5 bg-light">
                 <div class="form-group">
